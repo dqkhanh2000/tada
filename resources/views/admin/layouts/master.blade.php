@@ -224,7 +224,7 @@
                 var fillter =$('#category-fillter').val();
                 var category = data[2]; // use data for the category column
 
-                if(fillter === 'all') return true;
+                if(fillter === 'all' || fillter == null) return true;
                 else if ( fillter === category )
                 {
                     return true;

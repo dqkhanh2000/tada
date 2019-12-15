@@ -43,6 +43,7 @@
     </table>
 </div>
 <!-- END DATA TABLE -->
+<script src="{{route('home')}}/admin/vendor/datatable/datatable.js" type="text/javascript" charset="utf8"></script>
 <script>
     $(document).on('change', '.form-control', function(){
         $.ajax({
@@ -58,6 +59,13 @@
             success: function(e){ console.log(e)}
         })
     });
+
+    $.fn.dataTable.ext.order['dom-select'] = function  ( settings, col ){
+            return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
+                return $('select', td).val();
+            } );
+        }
+    
     $(document).ready( function () {
         $('#table-order').DataTable({
             "columns": [
