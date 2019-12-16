@@ -44,22 +44,21 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="{{url()->route('home')}}/asset/css/util.css">
         <link rel="stylesheet" type="text/css" href="{{url()->route('home')}}/asset/css/main.css">
+    {{-- get user  --}}
+    @auth
+        @php
+            $userLogged =Auth::user()->Customer()->get()->first();
+        @endphp
+    @endauth
     <script>
             var idCustomer = @guest
                             {{"null"}}
                          @else
-                         {{ Session::get('idCustomer')}}
+                         {{ $userLogged->CustomerID }}
                          @endguest
     </script>
     <!--===============================================================================================-->
 </head>
-
-{{-- get user  --}}
-@auth
-    @php
-        $userLogged =Auth::user()->Customer()->get()->first();
-    @endphp
-@endauth
 
 
 

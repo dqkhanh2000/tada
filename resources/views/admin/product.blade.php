@@ -96,6 +96,11 @@
             </div>
         </div>
     </div>
+    {{-- <script src="{{route('home')}}/admin/vendor/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap JS-->
+    <script src="{{route('home')}}/admin/vendor/bootstrap-4.1/popper.min.js"></script>
+    <script src="{{route('home')}}/admin/vendor/bootstrap-4.1/bootstrap.min.js"></script> --}}
+    <script src="{{route('home')}}/admin/vendor/datatable/datatable.js" type="text/javascript" charset="utf8"></script>
     <script>
             $(document).on('click', '.delete', function(){
                 var a = $(this);
@@ -107,11 +112,24 @@
                 var table = $('#table-product').DataTable();
                 $('#category-fillter').change( function() {
                     table.draw();
-        } );
+                } );
             } );
             $(document).on('click', ".paginate_button", e =>{
                 e.preventDefault();
             })
     </script>
+
+<script>
+    $.fn.dataTable.ext.search.push(
+        function( settings, data, dataIndex ) {
+            var fillter =$('#category-fillter').val();
+            var category = data[2]; // use data for the category column
+
+            if(fillter === 'all' || fillter == null || fillter === category) return true;
+            return false;
+        }
+    );
+
+</script>
 
 @endsection

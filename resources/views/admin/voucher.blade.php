@@ -120,6 +120,7 @@
             </div>
         </div>
     </div>
+    <script src="{{route('home')}}/admin/vendor/datatable/datatable.js" type="text/javascript" charset="utf8"></script>
     <script>
             function changeQuantity(target){
                 var quantity = $(target).val();

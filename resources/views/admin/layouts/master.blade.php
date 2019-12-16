@@ -33,7 +33,8 @@
     <!-- Main CSS-->
     <link href="{{route('home')}}/admin/css/theme.css" rel="stylesheet" media="all">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-
+    <script src="{{route('home')}}/admin/vendor/jquery-3.2.1.min.js"></script>
+    <!-- Main JS-->
 
 </head>
 
@@ -188,8 +189,6 @@
 
     </div>
 
-<!-- Jquery JS-->
-    <script src="{{route('home')}}/admin/vendor/jquery-3.2.1.min.js"></script>
     <!-- Bootstrap JS-->
     <script src="{{route('home')}}/admin/vendor/bootstrap-4.1/popper.min.js"></script>
     <script src="{{route('home')}}/admin/vendor/bootstrap-4.1/bootstrap.min.js"></script>
@@ -208,33 +207,8 @@
     <script src="{{route('home')}}/admin/vendor/chartjs/Chart.bundle.min.js"></script>
     <script src="{{route('home')}}/admin/vendor/select2/select2.min.js">
     </script>
-    <script src="{{route('home')}}/admin/vendor/datatable/datatable.js" type="text/javascript" charset="utf8"></script>
-
-    <!-- Main JS-->
+    {{-- <script src="{{route('home')}}/admin/vendor/datatable/datatable.js" type="text/javascript" charset="utf8"></script> --}}
     <script src="{{route('home')}}/admin/js/main.js"></script>
-
-    <script>
-        $.fn.dataTable.ext.order['dom-select'] = function  ( settings, col ){
-            return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
-                return $('select', td).val();
-            } );
-        }
-        $.fn.dataTable.ext.search.push(
-            function( settings, data, dataIndex ) {
-                var fillter =$('#category-fillter').val();
-                var category = data[2]; // use data for the category column
-
-                if(fillter === 'all' || fillter == null) return true;
-                else if ( fillter === category )
-                {
-                    return true;
-                }
-                return false;
-            }
-        );
-
-    </script>
-
 </body>
 
 </html>
