@@ -60,7 +60,7 @@ class PageController extends Controller
 
     public function order(Request $request){
 
-        $orders = Order::where('CustomerID', $request->session()->get("idCustomer"))->get();
+        $orders = Order::where('CustomerID', $request->session()->get("idCustomer"))->orderBy('OrderDate', 'desc')->paginate(3);
         return view('order', compact('orders'));
     }
 

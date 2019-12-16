@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cart;
 use App\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,7 @@ use App\User;
 
 class SocialController extends Controller
 {
+    protected $sessionIdBeforeLogin = null;
     /**
      * Redirect the user to the provider authentication page.
      *
@@ -25,15 +27,11 @@ class SocialController extends Controller
         }else{
             if(URL::previous() != URL::to('login')) Session::put('pre_url', URL::previous());
         }
+
+        $this->sessionIdBeforeLogin = Session::getId();
         return Socialite::driver($provider)->redirect();
     }
 
-    /**
-     * Lấy thông tin từ Provider, kiểm tra nếu người dùng đã tồn tại trong CSDL
-     * thì đăng nhập, ngược lại nếu chưa thì tạo người dùng mới trong SCDL.
-     *
-     * @return Response
-     */
 
     public function findOrCreateUser($user, $provider)
     {
@@ -64,6 +62,15 @@ class SocialController extends Controller
         $getInfo = Socialite::driver($provider)->user();
 
         $user = $this->findOrCreateUser($getInfo,$provider);
+
+        $customerID = $user->Customer()->get()->first()->CustomerID;
+
+        Session::put("idCustomer", $customerID);
+        $cart = Cart::where('SessionID', $this->sessionIdBeforeLogin)->get();
+        foreach($cart as $cartItem){
+            $cartItem->CustomerID = $customerID;
+            $cartItem->save();
+        }
 
         auth()->login($user);
 

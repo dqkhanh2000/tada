@@ -34,7 +34,7 @@ class OrderController extends Controller
         if($order->save()){
             OrderDetailController::create($idCustomer, $order->OrderID);
             (new CartController)->dropByCheckout($idCustomer);
-            return redirect()->route('order');
+            return url()->route('order');
         }
     }
 

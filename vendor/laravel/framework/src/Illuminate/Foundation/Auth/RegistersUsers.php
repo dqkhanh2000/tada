@@ -5,6 +5,7 @@ namespace Illuminate\Foundation\Auth;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 trait RegistersUsers
 {
@@ -57,6 +58,7 @@ trait RegistersUsers
      */
     protected function registered(Request $request, $user)
     {
-        //
+        $customerID = $user->Customer()->get()->first()->CustomerID;
+        Session::put("idCustomer", $customerID);
     }
 }

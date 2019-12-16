@@ -10,6 +10,14 @@
                     </div>
                 </div>
             </div>
+            @php
+                $countSum = 0;
+                $countProduct = 0;
+                foreach ($order as $key => $value){
+                    $countSum += $value->Total - $value->SubTotal;
+                    $countProduct +=$value->orderDetail()->get()->count();
+                }
+            @endphp
             <div class="row m-t-25">
                 <div class="col-sm-6 col-lg-3">
                     <div class="overview-item overview-item--c1">
@@ -38,14 +46,8 @@
                                 </div>
 
                                 <div class="text">
-                                        @php
-                                            $countSumQuantity = 0;
-                                            foreach ($orderDetail as $key => $value){
-                                                $countSumQuantity += $value->Quantity;
-                                            }
-                                            @endphp
                                     <h2>
-                                        {{$countSumQuantity}}
+                                        {{$countProduct}}
                                     </h2>
                                     <span>Sản phẩm đã bán</span>
                                 </div>
@@ -85,12 +87,6 @@
                                 </div>
                                 <div class="text">
                                     <h2>
-                                        @php
-                                            $countSum = 0;
-                                            foreach ($order as $key => $value){
-                                                $countSum += $value->Total - $value->SubTotal;
-                                            }
-                                            @endphp
                                             {{number_format($countSum)}}đ
                                     </h2>
                                     <span>Tổng doanh thu</span>

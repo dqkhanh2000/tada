@@ -184,8 +184,8 @@ $('.checkout').click((e) =>{
                 street: $street,
                 voucher: $(".voucher").val()
             }
-        }).then((e)=>{
-            console.log(e);
+        }).then((data)=>{
+            window.location.href = data;
         });
     }
 })

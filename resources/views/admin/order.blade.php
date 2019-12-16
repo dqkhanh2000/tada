@@ -28,7 +28,7 @@
                             <select style="width: 120px;" class="form-control  form-control-md" name="{{$order->OrderID}}" id="">
                                 <option class="Success" @if ($order->Status === 'Success')
                                         selected
-                                    @endif>Sucesss</option>
+                                    @endif>Success</option>
                                 <option class="Cancel" @if ($order->Status === 'Cancel')
                                             selected
                                 @endif>Cancel</option>
@@ -65,7 +65,7 @@
                 return $('select', td).val();
             } );
         }
-    
+
     $(document).ready( function () {
         $('#table-order').DataTable({
             "columns": [

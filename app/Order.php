@@ -11,7 +11,7 @@ class Order extends Model
     public $timestamps = false;
 
     public function orderDetail(){
-        return $this->hasMany("App\Orderdetail", "OrderID", "OrderID");
+        return $this->hasMany("App\OrderDetail", "OrderID", "OrderID");
     }
 
     public function customer(){

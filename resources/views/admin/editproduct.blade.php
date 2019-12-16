@@ -1,28 +1,30 @@
 @extends('admin.layouts.master')
 @section('content')
 <section class="p-t-100">
+    <h3 class="title-5 m-b-35">Thông tin sản phẩm</h3>
     <div class="row p-l-30">
-            <h3 class="title-5 m-b-35">Thông tin sản phẩm</h3>
-            <nav>
-                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Thông tin</a>
-                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Màu sắc</a>
-                </div>
-            </nav>
-            <input type="hidden" id="data-des" cols="30" rows="10" value="{{$groupProduct->Description}}">
-            <form action="" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <input type="hidden" id="data-des" cols="30" rows="10" value="{{$groupProduct->Description}}">
+        <form action="" method="post" enctype="multipart/form-data">
+                @csrf
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Thông tin</a>
+                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Màu sắc</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <div class="clear-fix"></div>
+                        <div class="p-l-10 p-t-20 p-b-20" style="background-color: honeydew">
                             <div class="row">
-                                    <div class="form-group p-t-10 col-md-4">
-                                            <label for="">Mã sản phẩm</label>
-                                        <input type="text" class="form-control" readonly name="code" aria-describedby="helpId" value="{{$groupProduct->GroupNameNoVN}}" placeholder="Mã sản phẩm">
-                                        </div>
-                                    <div class="form-group p-t-10 col-md-6">
-                                        <label for="">Tên</label>
-                                        <input type="text" class="form-control" name="name" value="{{$groupProduct->GroupName}}" aria-describedby="helpId" placeholder="Tên sản phẩm">
+                                <div class="form-group p-t-10 col-md-4">
+                                        <label for="">Mã sản phẩm</label>
+                                    <input type="text" class="form-control" readonly name="code" aria-describedby="helpId" value="{{$groupProduct->GroupNameNoVN}}" placeholder="Mã sản phẩm">
                                     </div>
+                                <div class="form-group p-t-10 col-md-6">
+                                    <label for="">Tên</label>
+                                    <input type="text" class="form-control" name="name" value="{{$groupProduct->GroupName}}" aria-describedby="helpId" placeholder="Tên sản phẩm">
+                                </div>
                             </div>
                             <div class="row">
                                     <div class="form-group p-t-10 col-md-4">
@@ -50,81 +52,82 @@
                             <div class="form-group">
                                 <label for="">Mô tả</label>
                                     <textarea class="form-control" name="description" id="description"></textarea>
-                                </div>
                             </div>
-                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                            <button type="button" class="btn btn-success float-right" id="btn-add-color">Thêm màu</button>
-                            <input type="hidden" id="numcolor" name="numcolor" value="0">
-
-                            @foreach ($groupProduct->productByColor()->get() as $color)
-                                <div class="form-group row p-l-10 p-t-20 p-b-20" style="background-color: honeydew">
-                                    <div class="col-4">
-                                            <label for="">Màu</label>
-                                            <input type="text" class="form-control color" name="{{$color->Color}}" value="{{$color->Color}}" aria-describedby="helpId">
-                                    </div>
-                                    <div class="form-group col-4">
-                                        <label for="">Chọn thêm hình</label>
-                                        <input type="file" class="form-control-file btn btn-primary file" multiple name="img{{$color->Color}}[]" placeholder="Chọn ảnh" aria-describedby="fileHelpId">
-                                    </div>
-
-                                    <div class="row m-t-20">
-                                        @foreach ($color->productImage()->get() as $item)
-                                            <div class="col-md-3">
-                                                    <span class="btn btn-danger"
-                                                        onclick="
-                                                            $('#deleteImgForm #idimg').val('{{$item->ImageID}}');
-                                                            document.getElementById('deleteImgForm').submit();
-                                                        ">Xóa</span>
-                                                    <img src="{{route('home')}}/image/{{$item->Path}}" class="img" alt="">
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <div class="col-7 mx-auto m-b-30 m-t-20">
-                                        <b class="m-b-10">Thông tin về size</b>
-                                        <button type="button" id="btn-add-size" color-id="{{$color->ProductByColorID}}"
-                                            onclick="$('#modal-add-size .color-id').val($(this).attr('color-id'));
-                                            $('#error').hide()" class="btn btn-success m-b-20 float-right btn-sm"  data-toggle="modal" data-target="#modal-add-size">Thêm size</button>
-                                        <table style="display:block;" class="table table-data2">
-                                            <thead style="background-color: white;">
-                                                <tr>
-                                                    <th>Id Sản phẩm</th>
-                                                    <th>Size</th>
-                                                    <th>Số lượng trong kho</th>
-                                                    <th>Số lượng đã bán</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($color->product()->get() as $product)
-                                                    <tr class="text-center">
-                                                        <td>{{$product->ProductID}}</td>
-                                                        <td>{{$product->Size}}</td>
-                                                        <td><div class="form-group">
-                                                                <input type="number" min="0" product-id="{{$product->ProductID}}" onchange="changeQuantity($(this))"
-                                                                    class="form-control" value="{{$product->QuantityStorage}}">
-                                                                </div></td>
-                                                        <td>{{$product->QuantitySelled}}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <style>
-                                        td, th{
-                                            border-top: 1px solid #dee2e6 !important;
-                                            padding: 10px 5px !important;
-                                            vertical-align: middle !important;
-                                        }
-                                    </style>
-                                </div>
-                            @endforeach
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-success float-right m-r-30">Xác nhận</button>
-            </form>
-            <form id="deleteImgForm" action="{{route('admin.deleteImage')}}" method="post">
-                    @csrf
-                    <input id="idimg" type="hidden" name="idimage" value="a">
-            </form>
+                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        <button type="button" class="btn btn-success float-right m-r-20" id="btn-add-color">Thêm màu</button>
+                        <input type="hidden" id="numcolor" name="numcolor" value="0">
+
+                        @foreach ($groupProduct->productByColor()->get() as $color)
+                            <div class="form-group row p-l-10 p-t-20 p-b-20" style="background-color: honeydew">
+                                <div class="col-4">
+                                        <label for="">Màu</label>
+                                        <input type="text" class="form-control color" name="{{$color->Color}}" value="{{$color->Color}}" aria-describedby="helpId">
+                                </div>
+                                <div class="form-group col-4">
+                                    <label for="">Chọn thêm hình</label>
+                                    <input type="file" class="form-control-file btn btn-primary file" multiple name="img{{$color->Color}}[]" placeholder="Chọn ảnh" aria-describedby="fileHelpId">
+                                </div>
+
+                                <div class="row m-t-20">
+                                    @foreach ($color->productImage()->get() as $item)
+                                        <div class="col-md-3">
+                                                <span class="btn btn-danger"
+                                                    onclick="
+                                                        $('#deleteImgForm #idimg').val('{{$item->ImageID}}');
+                                                        document.getElementById('deleteImgForm').submit();
+                                                    ">Xóa</span>
+                                                <img src="{{route('home')}}/image/{{$item->Path}}" class="img" alt="">
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="col-7 mx-auto m-b-30 m-t-20">
+                                    <b class="m-b-10">Thông tin về size</b>
+                                    <button type="button" id="btn-add-size" color-id="{{$color->ProductByColorID}}"
+                                        onclick="$('#modal-add-size .color-id').val($(this).attr('color-id'));
+                                        $('#error').hide()" class="btn btn-success m-b-20 float-right btn-sm"  data-toggle="modal" data-target="#modal-add-size">Thêm size</button>
+                                    <table style="display:block;" class="table table-data2">
+                                        <thead style="background-color: white;">
+                                            <tr>
+                                                <th>Id Sản phẩm</th>
+                                                <th>Size</th>
+                                                <th>Số lượng trong kho</th>
+                                                <th>Số lượng đã bán</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($color->product()->get() as $product)
+                                                <tr class="text-center">
+                                                    <td>{{$product->ProductID}}</td>
+                                                    <td>{{$product->Size}}</td>
+                                                    <td><div class="form-group">
+                                                            <input type="number" min="0" product-id="{{$product->ProductID}}" onchange="changeQuantity($(this))"
+                                                                class="form-control" value="{{$product->QuantityStorage}}">
+                                                            </div></td>
+                                                    <td>{{$product->QuantitySelled}}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <style>
+                                    td, th{
+                                        border-top: 1px solid #dee2e6 !important;
+                                        padding: 10px 5px !important;
+                                        vertical-align: middle !important;
+                                    }
+                                </style>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success float-right m-r-30">Xác nhận</button>
+        </form>
+        <form id="deleteImgForm" action="{{route('admin.deleteImage')}}" method="post">
+                @csrf
+                <input id="idimg" type="hidden" name="idimage" value="a">
+        </form>
     </div>
 </section>
 

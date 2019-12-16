@@ -21,10 +21,9 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $order = Order::where('Status', 'Success')->get();
-        $orderDetail = OrderDetail::all();
+        $order = Order::where('Status', 'Success')->orderBy('OrderDate', 'DESC')->get();
         $customer = Customer::all();
-        return view('admin.dashboard', compact('order', 'orderDetail', 'customer'));
+        return view('admin.dashboard', compact('order', 'customer'));
     }
 
     public function getReport(Request $request) {
@@ -75,7 +74,8 @@ class AdminController extends Controller
     public function product(Request $request){
         if($request->method() == 'GET'){
             $category = Category::all();
-            $groupProducts = GroupProduct::where('Deleted', '=', 0)->get();
+            $groupProducts = GroupProduct::where('Deleted', '=', 0)
+                                        ->orderBy('DateAdd', 'DESC')->get();
             return view('admin.product', compact('groupProducts', 'category'));
         }
         if($request->method() == 'POST'){
@@ -236,7 +236,7 @@ class AdminController extends Controller
 
     public function order()
     {
-        $orders = Order::all();
+        $orders = Order::orderBy('OrderDate', 'DESC')->get();
         return view('admin.order', compact('orders'));
     }
 
@@ -252,7 +252,7 @@ class AdminController extends Controller
 
     public function voucher(Request $request){
         if($request->method() == 'GET'){
-            $vouchers = Voucher::all();
+            $vouchers = Voucher::orderBy('VoucherID', 'DESC')->get();
             return view('admin.voucher', compact('vouchers'));
         }
         else if($request->method() =='POST'){

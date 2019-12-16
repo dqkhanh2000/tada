@@ -89,5 +89,9 @@
                     @endforeach
                 </div>
         </form>
+
+        <div class="flex-c-m flex-w w-full p-b-38">
+            {{$orders->links()}}
+        </div>
     @endif
 @endsection

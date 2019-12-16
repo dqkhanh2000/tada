@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 trait ResetsPasswords
@@ -110,6 +111,8 @@ trait ResetsPasswords
 
         event(new PasswordReset($user));
 
+        $customerID = $user->Customer()->get()->first()->CustomerID;
+        Session::put("idCustomer", $customerID);
         $this->guard()->login($user);
     }
 

@@ -121,12 +121,12 @@ trait AuthenticatesUsers
     public function authenticated(Request $request, $user)
     {
         $customerID = $user->Customer()->get()->first()->CustomerID;
+        $request->session()->put("idCustomer", $customerID);
         $cart = Cart::where('SessionID', $this->sessionIdBeforeLogin)->get();
         foreach($cart as $cartItem){
             $cartItem->CustomerID = $customerID;
             $cartItem->save();
         }
-        $request->session()->put("idCustomer", $customerID);
     }
 
     /**
