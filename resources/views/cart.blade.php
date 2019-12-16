@@ -144,24 +144,25 @@
                                     </button>
                                     <script>
                                         function update(){
-                                            $data = {};
+                                            var data = {};
                                             $('.num-product').each((index, value)=>{
-                                                $product = $(value);
-                                                if($product.attr("id")){
-                                                    $data['s'+index] = {
-                                                        idCart: $product.attr("id"),
-                                                        quantity: $product.val()
+                                                var product = $(value);
+                                                if(!isNaN(parseInt(product.attr("id")))){
+
+                                                    data['s'+index] = {
+                                                        idCart: product.attr("id"),
+                                                        quantity: product.val()
                                                     }
                                                 }
-                                            });
 
+                                            });
                                             $.ajax({
                                                 headers: {
                                                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                                                 },
                                                 method: "POST",
                                                 url: "{{route('updateCart')}}",
-                                                data: $data,
+                                                data: data,
                                             }).then(e => {
                                                 if(e === 'ok')
                                                     location.reload();
