@@ -192,30 +192,65 @@
 			<ul class="main-menu-m">
 
                 <li >
-                        <a href="{{url()->route('home')}}">Trang chủ</a>
-                    </li>
+                    <a href="{{url()->route('home')}}">Trang chủ</a>
+                </li>
                     @foreach (App\ProductType::all() as $type)
-                    <li>
-                        <a href="{{route('category', $type->TypeCode)}}">{{$type->TypeName}}</a>
-                        @php
-                            $categorys = $type->category()->get();
-                        @endphp
-                        @if ($categorys->count() > 0)
-                            <ul class="sub-menu-m">
-                                @foreach ($categorys as $category)
-                                <li><a href="{{route('category', [$type->TypeCode, $category->CategoryCode])}}">{{$category->CategoryName}}</a></li>
-                                @endforeach
-                            </ul>
-                            <span class="arrow-main-menu-m">
-                                <i class="fa fa-angle-right" aria-hidden="true"></i>
-                            </span>
-                        @endif
-                    </li>
+                        <li>
+                            <a href="{{route('category', $type->TypeCode)}}">{{$type->TypeName}}</a>
+                            @php
+                                $categorys = $type->category()->get();
+                            @endphp
+                            @if ($categorys->count() > 0)
+                                <ul class="sub-menu-m">
+                                    @foreach ($categorys as $category)
+                                    <li><a href="{{route('category', [$type->TypeCode, $category->CategoryCode])}}">{{$category->CategoryName}}</a></li>
+                                    @endforeach
+                                </ul>
+                                <span class="arrow-main-menu-m">
+                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                </span>
+                            @endif
+                        </li>
                     @endforeach
-                    <li>
-                        <a href="{{route('contact')}}">Giới thiệu</a>
-                    </li>
+                <li>
+                    <a href="{{route('contact')}}">Giới thiệu</a>
+                </li>
+                <li>
+                    <a href="#">Tài khoản</a>
+                    <ul class="sub-menu-m">
+                        @guest
+                            <li>
+                                <a href="{{ route('login') }}">Đăng nhập</a>
+                            </li>
+                            @if (Route::has('register'))
+                                <li>
+                                    <a href="{{ route('register') }}">Đăng ký</a>
+                                </li>
+                            @endif
+                        @else
+                            <li>
+                                <a role="button" href="#" data-toggle="modal" data-target="#modal-profile">
+                                    {{$userLogged->CustomerName}}
+                                </a>
+                            </li>
 
+                            <li><a href="{{route('order')}}">Đơn hàng của tôi</a></li>
+                            <li><a href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                                    document.getElementById('logout-form').submit();">
+                                        {{ __('Đăng xuất') }}
+                                </a></li>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+
+                        @endguest
+                    </ul>
+                    <span class="arrow-main-menu-m">
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </span>
+                </li>
 			</ul>
 		</div>
 
