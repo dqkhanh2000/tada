@@ -11,7 +11,7 @@
                         <select class="js-select2" id="category-fillter" name="property">
                             <option value="all" selected="selected">Tất cả danh mục</option>
                             @foreach ($category as $item)
-                                <option value="{{$item->CategoryName}}">{{$item->CategoryName}}</option>
+                                <option value="{{$item->category_name}}">{{$item->category_name}}</option>
                             @endforeach
                         </select>
                         <div class="dropDownSelect2"></div>
@@ -39,24 +39,24 @@
                         @foreach ($groupProducts as $group)
                             <tr class="tr-shadow">
                                 <td>
-                                    <img src="{{route('home')}}/image/{{$group->productByColor()->get()->first()->SmallImage}}" style="width:100px">
+                                    <img src="{{route('home')}}/{{$group->image}}" style="width:100px">
                                 </td>
                                 <td>
-                                    <a href="{{route('detail', $group->GroupNameNoVN)}}">{{$group->GroupName}}</a>
+                                    <a href="{{route('detail', $group->group_code)}}">{{$group->group_name}}</a>
 
                                 </td>
-                                <td class="desc">{{$group->category()->get()->first()->CategoryName}}</td>
+                                <td class="desc">{{$group->category()->get()->first()->category_name}}</td>
                                 <td>
-                                    <span class="status--process">{{$group->Type}}</span>
+                                    <span class="status--process">{{$group->type}}</span>
                                 </td>
-                                <td>{{$group->Price}}</td>
-                                <td>{{$group->Sale}}</td>
+                                <td>{{$group->price}}</td>
+                                <td>{{$group->sale_off}}</td>
                                 <td>
                                     <div class="table-data-feature">
-                                        <a href="{{route('admin.editProduct', $group->GroupNameNoVN)}}" class="item edit" productid="{{$group->GroupProductID}}" data-toggle="tooltip" data-placement="top" title="Edit">
+                                        <a href="{{route('admin.editProduct', $group->group_code)}}" class="item edit" productid="{{$group->id}}" data-toggle="tooltip" data-placement="top" title="Edit">
                                             <i class="zmdi zmdi-edit"></i>
                                         </a>
-                                        <button class="item delete" productid="{{$group->GroupProductID}}" productname="{{$group->GroupName}}" data-toggle="modal" data-placement="top" data-target="#modal" title="Delete">
+                                        <button class="item delete" productid="{{$group->id}}" productname="{{$group->group_name}}" data-toggle="modal" data-placement="top" data-target="#modal" title="Delete">
                                             <i class="zmdi zmdi-delete"></i>
                                         </button>
                                     </div>

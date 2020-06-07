@@ -7,22 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     protected $table = "customers";
-    protected $primaryKey = "CustomerID";
     protected $fillable = [
-        'CustomerName', 'Address', 'Phone', 'UserID', 'Gender'
+        'customer_name', 'address', 'phone', 'id_user', 'gender'
     ];
     public $timestamps = false;
 
     public function user(){
-        return $this->belongsTo("App\User", "UserID", "id");
+        return $this->belongsTo("App\User", "id_user", "id");
     }
 
     public function cart(){
-        return $this->hasMany("App\Cart", "CustomerID", "CustomerID");
+        return $this->hasMany("App\Cart", "id_customer", "id");
     }
 
     public function order(){
-        return $this->hasMany("App\Order", "CustomerID", "CustomerID");
+        return $this->hasMany("App\Order", "id_customer", "id");
     }
 
 }

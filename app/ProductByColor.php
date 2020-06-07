@@ -7,19 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class ProductByColor extends Model
 {
     //
-    protected $table = "productbycolors";
-    protected $primaryKey = "ProductByColorID";
+    protected $table = "product_colors";
     public $timestamps = false;
 
     public function groupProduct(){
-        return $this->belongsTo("App\GroupProduct", "GroupProductID", "GroupProductID");
+        return $this->belongsTo("App\GroupProduct", "id_group_product", "id");
     }
 
     public function product(){
-        return $this->hasMany("App\Product", "ProductByColorID", "ProductByColorID");
+        return $this->hasMany("App\Product", "id_product_color", "id");
     }
 
     public function productImage(){
-        return $this->hasMany("App\ProductImage", "ProductByColorID", "ProductByColorID");
+        return $this->hasMany("App\ProductImage", "id_product_color", "id");
     }
 }

@@ -30,38 +30,38 @@
                     <tbody>
                         @foreach ($vouchers as $voucher)
                             <tr class="tr-shadow">
-                                <input type="hidden" class="voucher-id" voucherid="{{$voucher->VoucherID}}">
+                                <input type="hidden" class="voucher-id" voucherid="{{$voucher->id}}">
                                 <td>
-                                    {{DateTime::createFromFormat('Y-m-d H:i:s', $voucher->StartDate)->format('H:i:s')}}
+                                    {{DateTime::createFromFormat('Y-m-d H:i:s', $voucher->start_date)->format('H:i:s')}}
                                     <br>
-                                    {{DateTime::createFromFormat('Y-m-d H:i:s', $voucher->StartDate)->format('d-m-Y')}}
+                                    {{DateTime::createFromFormat('Y-m-d H:i:s', $voucher->start_date)->format('d-m-Y')}}
                                 </td>
                                 <td>
-                                    {{DateTime::createFromFormat('Y-m-d H:i:s', $voucher->EndDate)->format('H:i:s')}}
+                                    {{DateTime::createFromFormat('Y-m-d H:i:s', $voucher->end_date)->format('H:i:s')}}
                                     <br>
-                                    {{DateTime::createFromFormat('Y-m-d H:i:s', $voucher->EndDate)->format('d-m-Y')}}
+                                    {{DateTime::createFromFormat('Y-m-d H:i:s', $voucher->end_date)->format('d-m-Y')}}
                                 </td>
-                                <td>{{$voucher->Code}}</td>
-                                <td>{{$voucher->Event}}</td>
+                                <td>{{$voucher->code}}</td>
+                                <td>{{$voucher->event}}</td>
                                 <td>
                                     <div class="form-group" >
                                         <input type="number" style="width: 60px; font-size: 12px;" min="0" max="100"
-                                                onchange="changeValue(this)"    class="form-control value" value="{{$voucher->Value}}">
+                                                onchange="changeValue(this)"    class="form-control value" value="{{$voucher->value}}">
                                         </div>
                                 </td>
                                 <td>
                                     <div class="form-group" style="width: 100px">
-                                        <input type="number" onchange="changeQuantity(this)" min="{{$voucher->QuantityUsed}}" class="form-control quantity" value="{{$voucher->Quantity}}">
+                                        <input type="number" onchange="changeQuantity(this)" min="{{$voucher->quantity_used}}" class="form-control quantity" value="{{$voucher->quantity}}">
                                     </div>
                                 </td>
-                                <td>{{$voucher->QuantityUsed}}</td>
+                                <td>{{$voucher->quantity_used}}</td>
                                 <td>
                                         <div class="form-group" style="width: 100px;">
-                                            <select onchange="changeStatus(this)" class="form-control  form-control-md" name="{{$voucher->VoucherID}}">
-                                                <option class="Success" @if ($voucher->Status === 'Active')
+                                            <select onchange="changeStatus(this)" class="form-control  form-control-md" name="{{$voucher->id}}">
+                                                <option class="Success" @if ($voucher->status === 'Active')
                                                         selected
                                                     @endif>Active</option>
-                                                <option class="Cancel" @if ($voucher->Status === 'Cancel')
+                                                <option class="Cancel" @if ($voucher->status === 'Cancel')
                                                             selected
                                                 @endif>Cancel</option>
                                             </select>

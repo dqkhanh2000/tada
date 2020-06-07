@@ -50,7 +50,7 @@
                                                     <select class="form-control form-control-sm" name="category">
 
                                                         @foreach ($category as $item)
-                                                            <option>{{$item->CategoryName}}</option>
+                                                            <option>{{$item->category_name}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>

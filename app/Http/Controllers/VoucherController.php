@@ -15,14 +15,14 @@ class VoucherController extends Controller
      */
     public function index(Request $request)
     {
-        $voucher = Voucher::where('Code', $request->voucher)->get();
+        $voucher = Voucher::where('code', $request->voucher)->get();
         $totalCart = (new CartController)->calTotal();
         if($voucher->count() > 0){
             $voucher = $voucher->first();
             date_default_timezone_set('Asia/Ho_Chi_Minh');
             $now = date("Y-m-d H:i:s");
-            if($voucher->Status === "Active" && $now < $voucher->EndDate && $voucher->Quantity - $voucher->QuantityUsed > 0){
-                return $voucher->Value;
+            if($voucher->status === "Active" && $now < $voucher->end_date && $voucher->quantity - $voucher->quantity_used > 0){
+                return $voucher->value;
             }
             else return ["false" => "Mã giảm giá không còn khả dụng"];
         }

@@ -13,13 +13,13 @@ class ViewDB extends Model
         $curentDate = date('Y-m-d');
         $viewDB = ViewDB::where('Date', $curentDate)->first();
         if($viewDB){
-            $viewDB->CountView = $viewDB->CountView +1;
+            $viewDB->count_view = $viewDB->count_view +1;
             $viewDB->save();
         }
         else{
             $viewDB = new ViewDB;
-            $viewDB->Date = $curentDate;
-            $viewDB->CountView = 1;
+            $viewDB->date = $curentDate;
+            $viewDB->count_view = 1;
             $viewDB->save();
         }
     }

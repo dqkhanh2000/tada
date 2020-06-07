@@ -68,7 +68,7 @@
         $target[0].innerHTML="";
         $(".wrap-slick3-dots")[0].innerHTML="";
         image.forEach(element => {
-            var path = $("#home-url").attr('value') + "/image/"+element,
+            var path = $("#home-url").attr('value') + "/"+element,
             data = '<div class="item-slick3" data-thumb="'+path +'">'+
                         '<div class="wrap-pic-w pos-relative">'+
                             '<img src="'+path+'" alt="IMG-PRODUCT">'+

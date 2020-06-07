@@ -10,6 +10,7 @@ use App\GroupProduct;
 use App\Order;
 use App\OrderDetail;
 use App\Product;
+use App\ProductType;
 use App\ProductByColor;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
@@ -20,19 +21,19 @@ class PageController extends Controller
 {
 
     public function home(Request $request){
-        $new = GroupProduct::where('Deleted', '=', 0)
-                            ->orderBy('DateAdd', 'desc')
+        $new = GroupProduct::where('deleted', '=', 0)
+                            ->orderBy('date_added', 'desc')
                             ->limit(12)
                             ->get();
-        $women = GroupProduct::where('Deleted', '=', 0)
-                            ->whereRaw("lower(Type) = 'women'")
-                        ->orderBy('DateAdd', 'desc')
+        $women = GroupProduct::where('deleted', '=', 0)
+                            ->where('type', 1)
+                        ->orderBy('date_added', 'desc')
                         ->limit(12)
                         ->get();
 
-        $men = GroupProduct::where('Deleted', '=', 0)
-        ->whereRaw("lower(Type) = 'men'")
-                ->orderBy('DateAdd', 'desc')
+        $men = GroupProduct::where('deleted', '=', 0)
+                ->where('type', 2)
+                ->orderBy('date_added', 'desc')
                 ->limit(12)
                 ->get();
         $home = true;
@@ -43,13 +44,13 @@ class PageController extends Controller
     public function product(){
         $shop = true;
 
-        $product = GroupProduct::where('Deleted', '=', 0)->inRanDomOrder()->get();//->paginate(12);
+        $product = GroupProduct::where('deleted', '=', 0)->inRanDomOrder()->get();//->paginate(12);
         return view("product", compact("shop", 'product'));
     }
 
     public function detail($id){
 
-        $product = GroupProduct::where('GroupNameNoVN', $id)->get()->first();
+        $product = GroupProduct::where('group_code', $id)->get()->first();
         return view("detail", compact("id", 'product'));
     }
 
@@ -60,33 +61,34 @@ class PageController extends Controller
 
     public function order(Request $request){
 
-        $orders = Order::where('CustomerID', $request->session()->get("idCustomer"))->orderBy('OrderDate', 'desc')->paginate(3);
+        $orders = Order::where('id_customer', $request->session()->get("idCustomer"))->orderBy('order_date', 'desc')->paginate(3);
         return view('order', compact('orders'));
     }
 
     public function search(Request $request){
 
         $key = $request->get('k');
-        $product = GroupProduct::where("Deleted", 0)
-                                ->whereRaw("(lower(GroupNameNoVN) like lower('%".$key."%') or lower(GroupName) like lower('%".$key."%'))")
+        $product = GroupProduct::where("deleted", 0)
+                                ->whereRaw("(lower(group_code) like lower('%".$key."%') or lower(group_name) like lower('%".$key."%'))")
                                 ->paginate(12);
         return view('search', compact('product', 'key'));
     }
 
     public function category($type, $category = null, Request $request){
+        $typeID = ProductType::whereRaw("lower(type_code) like lower('$type')")->get()->first()->id;
         $filterQuery = null;
         $orderQuery = null;
         if($request->get('order')){
             $orderBy = $request->get('order');
             switch ($orderBy) {
                 case 'price':
-                    $orderQuery = "Price";
+                    $orderQuery = "price";
                     break;
                 case 'pricedesc':
-                    $orderQuery = "Price desc";
+                    $orderQuery = "price desc";
                     break;
                 case 'newest':
-                    $orderQuery = "DateAdd desc";
+                    $orderQuery = "date_added desc";
                     break;
             }
         }
@@ -94,34 +96,35 @@ class PageController extends Controller
             $filter = $request->get('filterprice');
             switch ($filter) {
                 case '100':
-                    $filterQuery = "Price <= '100,000₫'";
+                    $filterQuery = "price <= '100,000₫'";
                     break;
                 case '300':
-                    $filterQuery = "(Price > '100,000₫' and Price <= '300,000₫')";
+                    $filterQuery = "(price > '100,000₫' and price <= '300,000₫')";
                     break;
                 case '500':
-                    $filterQuery = "(Price > '300,000₫' and Price <= '500,000₫')";
+                    $filterQuery = "(price > '300,000₫' and price <= '500,000₫')";
                     break;
                 case '1000':
-                    $filterQuery = "(Price > '500,000₫' and Price <= '1,000,000₫')";
+                    $filterQuery = "(price > '500,000₫' and price <= '1,000,000₫')";
                     break;
                 case 'max':
-                    $filterQuery = "(Price > '1,000,000₫')";
+                    $filterQuery = "(price > '1,000,000₫')";
                     break;
             }
         }
 
         $product = null;
         if($category){
-            $categoryID = Category::where('CategoryCode', $category)->get();
+            $categoryID = Category::where('category_code', $category)->get();
             if($categoryID->count() > 0)
-                $categoryID = $categoryID->first()->CategoryID;
-                $product = GroupProduct::whereRaw("lower(Type) like lower('$type')")
-                                        ->where("CategoryID",$categoryID)
-                                        ->where("Deleted", 0);
+                $categoryID = $categoryID->first()->id;
+                $product = GroupProduct::where("type", $typeID)
+                                        ->where("id_category",$categoryID)
+                                        ->where("deleted", 0);
+
                                         // ->get();
         }
-        else $product = GroupProduct::whereRaw("lower(Type) like lower('$type')")->where("Deleted", 0);
+        else $product = GroupProduct::where("type", $typeID)->where("deleted", 0);
         if($filterQuery) $product = $product->whereRaw($filterQuery);
         if($orderQuery) $product = $product->orderByRaw($orderQuery);
         $product = $product->paginate(12);

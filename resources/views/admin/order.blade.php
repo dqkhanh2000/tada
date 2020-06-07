@@ -78,7 +78,6 @@
                             <th>Khách hàng</th>
                             <th>Địa chỉ</th>
                             <th>Tổng tiền</th>
-                            <th>Khuyến mãi</th>
                             <th>Trạng thái</th>
                         </tr>
                     </tr>
@@ -86,21 +85,20 @@
                 <tbody>
                     @foreach ($orders as $order)
                         <tr>
-                            <td>{{$order->OrderDate}}</td>
-                            <td><a href="{{route('admin.orderDetail', $order->OrderID)}}">{{$order->OrderID}}</a></td>
-                            <td>{{$order->customer()->get()->first()->CustomerName}}</td>
-                            <td>{{$order->Address}}</td>
-                            <td>{{number_format($order->Total)}}</td>
-                            <td>{{number_format($order->SubTotal)}}</td>
+                            <td>{{$order->order_date}}</td>
+                            <td><a href="{{route('admin.orderDetail', $order->id)}}">{{$order->id}}</a></td>
+                            <td>{{$order->customer()->get()->first()->customer_name}}</td>
+                            <td>{{$order->address}}</td>
+                            <td>{{number_format($order->total)}}</td>
                             <td>
-                                    <select style="width: 120px;" class="form-control  form-control-md" name="{{$order->OrderID}}" id="">
-                                        <option class="Success" @if ($order->Status === 'Success')
+                                    <select style="width: 120px;" class="form-control  form-control-md" name="{{$order->id}}" id="">
+                                        <option class="Success" @if ($order->status === 'Success')
                                                 selected
                                             @endif>Success</option>
-                                        <option class="Cancel" @if ($order->Status === 'Cancel')
+                                        <option class="Cancel" @if ($order->status === 'Cancel')
                                                     selected
                                         @endif>Cancel</option>
-                                        <option class="Pending" @if ($order->Status === 'Pending')
+                                        <option class="Pending" @if ($order->status === 'Pending')
                                                 selected
                                         @endif>Pending</option>
                                     </select>
@@ -144,7 +142,6 @@
     $(document).ready( function () {
         var table = $('#table-order').DataTable({
             "columns": [
-                null,
                 null,
                 null,
                 null,

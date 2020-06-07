@@ -41,30 +41,31 @@
                                                 @foreach ($cart as $cartItem)
                                                     @php
                                                         $cartProduct = $cartItem->product()->get()->first();
-                                                        $money = str_replace('₫', '', str_replace(',', '', $cartProduct->getGroup()->Price));
-                                                        $total += ((int)$money)*$cartItem->Quantity;
+                                                        $money = str_replace('₫', '', str_replace(',', '', $cartProduct->getGroup()->price));
+                                                        $total += ((int)$money)*$cartItem->quantity;
                                                     @endphp
                                                 <tr class="table_row">
                                                     <td class="column-1">
                                                         <div class="how-itemcart1">
-                                                                <img src="{{asset("/image")}}/{{$cartProduct->productByColor()->get()->first()->SmallImage}}" alt="IMG">
+                                                                <img src="{{route('home')}}/{{$cartProduct->productBycolor()->get()->first()->groupProduct()->get()->first()->image}}" alt="IMG">
                                                         </div>
                                                     </td>
 
                                                     <td class="column-2" colspan="2">
-                                                            <a href="{{route('detail', $cartProduct->getGroup()->GroupNameNoVN)}}" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
-                                                                    {{$cartProduct->getGroup()->GroupName}}
+                                                            <a href="{{route('detail', $cartProduct->getGroup()->group_code)}}" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
+                                                                    {{$cartProduct->getGroup()->group_name}}
+
                                                             </a>
                                                             <span class="header-cart-item-info">
-                                                                    Phân loại (màu): {{$cartProduct->productByColor()->get()->first()->Color}}
+                                                                    Phân loại (màu): {{$cartProduct->productByColor()->get()->first()->color}}
                                                                     <br>
-                                                                    Size: {{$cartProduct->Size}}
+                                                                    Size: {{$cartProduct->size}}
                                                             </span>
                                                     </td>
 
 
 
-                                                    <td class="column-3">{{$cartProduct->getGroup()->Price}}</td>
+                                                    <td class="column-3">{{$cartProduct->getGroup()->price}}</td>
 
                                                     <td class="column-4">
                                                         <div class="wrap-num-product flex-w m-l-auto m-r-0">
@@ -72,7 +73,7 @@
                                                                 <i class="fs-16 zmdi zmdi-minus"></i>
                                                             </div>
 
-                                                            <input class="mtext-104 cl3 txt-center num-product" type="number" id="{{$cartItem->id}}" name="num-product" value="{{$cartItem->Quantity}}">
+                                                            <input class="mtext-104 cl3 txt-center num-product" type="number" id="{{$cartItem->id}}" name="num-product" value="{{$cartItem->quantity}}">
 
                                                             <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
                                                                 <i class="fs-16 zmdi zmdi-plus"></i>
@@ -234,7 +235,7 @@
                                         </span>
                                         <div class="form-group float-left">
                                           <input type="text" class="form-control" name="name" id="name-cart" aria-describedby="helpId"
-                                          value="{{ Auth::user()->Customer()->get()->first()->CustomerName }}">
+                                          value="{{ Auth::user()->Customer()->get()->first()->customer_name }}">
                                         </div>
                                     </div>
                                 </div>

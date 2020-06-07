@@ -26,14 +26,14 @@ class OrderDetailController extends Controller
      */
     public static function create($idCustomer, $orderID)
     {
-        $carts = Cart::where('CustomerID', '=', $idCustomer)->get();
+        $carts = Cart::where('id_customer', '=', $idCustomer)->get();
         foreach($carts as $key => $value){
-            $idGroup = $value['ProductID'];
-            $quantity = $value['Quantity'];
+            $idGroup = $value['id_product'];
+            $quantity = $value['quantity'];
             $orderDetail = new OrderDetail;
-            $orderDetail->OrderID = $orderID;
-            $orderDetail->ProductID = $idGroup;
-            $orderDetail->Quantity = $quantity;
+            $orderDetail->id_order = $orderID;
+            $orderDetail->id_product = $idGroup;
+            $orderDetail->quantity = $quantity;
             $orderDetail->save();
         }
     }

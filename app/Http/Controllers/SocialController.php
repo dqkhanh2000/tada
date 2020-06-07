@@ -36,7 +36,7 @@ class SocialController extends Controller
     public function findOrCreateUser($user, $provider)
     {
         $name = $user->user['family_name'].' '.$user->user['given_name'];
-        $authUser = User::where('ProviderID', $user->id)->first();
+        $authUser = User::where('id_provider', $user->id)->first();
         if ($authUser) {
             return $authUser;
         }
@@ -44,14 +44,14 @@ class SocialController extends Controller
         if($userDB == null){
             $userDB = new User;
             $userDB->email = $user->email;
-            $userDB->ProviderName = $provider;
-            $userDB->ProviderID = $user->id;
-            $userDB->Avatar = $user->avatar;
+            $userDB->provider_name = $provider;
+            $userDB->id_provider = $user->id;
+            $userDB->avatar = $user->avatar;
             $userDB->save();
 
             $customer = new Customer;
-            $customer->CustomerName = $name;
-            $customer->UserID = $userDB->id;
+            $customer->customer_name = $name;
+            $customer->id_user = $userDB->id;
             $customer->save();
         }
 
@@ -63,12 +63,12 @@ class SocialController extends Controller
 
         $user = $this->findOrCreateUser($getInfo,$provider);
 
-        $customerID = $user->Customer()->get()->first()->CustomerID;
+        $customerID = $user->Customer()->get()->first()->id;
 
         Session::put("idCustomer", $customerID);
-        $cart = Cart::where('SessionID', $this->sessionIdBeforeLogin)->get();
+        $cart = Cart::where('id_session', $this->sessionIdBeforeLogin)->get();
         foreach($cart as $cartItem){
-            $cartItem->CustomerID = $customerID;
+            $cartItem->id_customer = $customerID;
             $cartItem->save();
         }
 

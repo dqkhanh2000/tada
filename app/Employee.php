@@ -7,19 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 class Employee extends Model
 {
     protected $table = "employees";
-    protected $primaryKey = "EmployeeID";
+
     public $timestamps = false;
 
     public function user(){
-        return $this->hasOne("App\User", "UserID", "UserID");
+        return $this->hasOne("App\User", "id_user", "id");
     }
 
     public function order(){
-        return $this->hasMany("App\Order", "EmployeeID", "EmployeeID");
+        return $this->hasMany("App\Order", "id_employee", "id");
     }
 
     public function productChangeHistory(){
-        return $this->hasMany("App\ProducChangeHistory", "EmployeeID", "EmployeeID");
+        return $this->hasMany("App\ProducChangeHistory", "id_employee", "id");
     }
 
 }

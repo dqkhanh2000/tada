@@ -65,7 +65,7 @@ Route::group([
 
         Route::post('/change-quantity/product', function (Request $request){
             $product = Product::find($request->id);
-            $product->QuantityStorage = $request->quantity;
+            $product->quantity_storage = $request->quantity;
             if($product->save()) return 'ok';
             return 'false';
         })->name('changeQuantityProduct');
@@ -80,14 +80,14 @@ Route::group([
 
         Route::post('/new-size', function (Request $request){
             if($request->size){
-                $isUsed = Product::where('ProductByColorID', $request->colorid)
+                $isUsed = Product::where('id_product_color', $request->colorid)
                                     ->where('Size', $request->size)->get();
                 if($isUsed->first())return ['error'=> 'Size đã tồn tại'];
                 else {
                     $size = new Product;
                     $size->Size = $request->size;
-                    $size->ProductByColorID = $request->colorid;
-                    $size->QuantityStorage = $request->quantity;
+                    $size->id_product_color = $request->colorid;
+                    $size->quantity_storage = $request->quantity;
                     if($size->save()) return 'ok';
                     else ['error'=> 'Có lỗi xuất hiện'];
                 }
@@ -124,35 +124,35 @@ Route::post('/get-commune', "AddressController@commune")->name('commune');
 Route::post('/checkout', "OrderController@create")->name('checkout');
 
 Route::post('/get-size-by-color', function (Request $request) {
-    $groupID = GroupProduct::where("GroupNameNoVN", "=", $request->groupID)->get()->first()->GroupProductID;
+    $groupID = GroupProduct::where("group_code", $request->groupID)->get()->first()->id;
     $productByColor = ProductByColor::where([
-                                            ["Color", "=", $request->color],
-                                            ["GroupProductID", "=", $groupID]
-                                        ])->get()->first()->ProductByColorID;
+                                            ["color", "like", $request->color],
+                                            ["id_group_product", "=", $groupID]
+                                        ])->get()->first()->id;
     $data = Product::where([
-                                ["ProductByColorID", "=", $productByColor],
-                                ["QuantityStorage", ">", 0]
-                            ])->select("ProductID as id", "Size as text")->get();
+                                ["id_product_color", "=", $productByColor],
+                                ["quantity_storage", ">", 0]
+                            ])->select("id", "Size as text")->get();
     return $data;
 })->name("getSizeByColor");
 
 Route::post('/get-detail', function (Request $request) {
-    $product = GroupProduct::select("GroupProductID", "GroupName as name", "GroupNameNoVN as code", "Price as price", "Description as description", "sale as sale")
-                                ->where("GroupNameNoVN", $request->id)->get()->first();
+    $product = GroupProduct::select("id", "group_name as name", "group_code as code", "price as price", "description as description", "sale_off as sale")
+                                ->where("group_code", $request->id)->get()->first();
     $color = [];
     $image = [];
     $size = [];
-    $productID = $product->productByColor()->get()->first()->product()->get()->first()->ProductID;
+    $id_product = $product->productByColor()->get()->first()->product()->get()->first()->id;
     foreach($product->productByColor()->get() as $item){
-        array_push($color, ["id" => $item->ProductByColorID, "text" => $item->Color]);
+        array_push($color, ["id" => $item->id, "text" => $item->color]);
         foreach($item->productImage()->get() as $images){
-            array_push($image, $images->Path);
+            array_push($image, $images->path);
         }
     }
     foreach($product->productByColor()->get()->first()->product()->get() as $sizes){
-        array_push($size, ["id" => $sizes->ProductID, "text" => $sizes->Size]);
+        array_push($size, ["id" => $sizes->id, "text" => $sizes->size]);
     }
-    return [$product, $color, $image, $size, $productID];
+    return [$product, $color, $image, $size, $id_product];
 });
 
 Route::get('redirect/{driver}', 'SocialController@redirectToProvider')

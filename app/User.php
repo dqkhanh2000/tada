@@ -31,7 +31,7 @@ class User extends Authenticatable
 
     public function customer()
     {
-        return $this->belongsTo("App\Customer", "id", "UserID");
+        return $this->belongsTo("App\Customer", "id", "id_user");
     }
 
     /**

@@ -6,24 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class GroupProduct extends Model
 {
-    protected $table = "groupproducts";
-    protected $primaryKey = "GroupProductID";
+    protected $table = "group_products";
     public $timestamps = false;
 
     public function category(){
-        return $this->belongsTo("App\Category", "CategoryID", "CategoryID");
+        return $this->belongsTo("App\Category", "id_category", "id");
     }
 
     public function productByColor(){
-        return $this->hasMany("App\ProductByColor", "GroupProductID", "GroupProductID");
+        return $this->hasMany("App\ProductByColor", "id_group_product", "id");
     }
 
     public function productChangeHistory(){
-        return $this->hasMany("App\ProductChangeHistory", "GroupProductID", "GroupProductID");
+        return $this->hasMany("App\ProductChangeHistory", "id_group_product", "id");
     }
 
     public function cart(){
-        return $this->hasMany("App\Cart", "GroupProductID", "GroupProductID");
+        return $this->hasMany("App\Cart", "id_group_product", "id");
     }
 
 

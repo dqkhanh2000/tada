@@ -14,7 +14,7 @@
                 $countSum = 0;
                 $countProduct = 0;
                 foreach ($order as $key => $value){
-                    $countSum += $value->Total - $value->SubTotal;
+                    $countSum += $value->total ;
                     $countProduct +=$value->orderDetail()->get()->count();
                 }
             @endphp

@@ -32,10 +32,10 @@ class AppServiceProvider extends ServiceProvider
         {
             $cart = NULL;
             if(Session::get('idCustomer'))
-                $cart = Cart::where("CustomerID", "=", Session::get('idCustomer'))
-                        ->orWhere('SessionID', Session::getId())->get();
+                $cart = Cart::where("id_customer", "=", Session::get('idCustomer'))
+                        ->orWhere('id_session', Session::getId())->get();
             else
-                $cart = Cart::where('SessionID', Session::getId())->get();
+                $cart = Cart::where('id_session', Session::getId())->get();
             if(Session::get('countedView') == null){
                 ViewDB::count();
                 Session::put('countedView', true);

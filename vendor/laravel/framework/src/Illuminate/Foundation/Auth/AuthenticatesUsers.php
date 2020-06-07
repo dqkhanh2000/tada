@@ -120,11 +120,11 @@ trait AuthenticatesUsers
      */
     public function authenticated(Request $request, $user)
     {
-        $customerID = $user->Customer()->get()->first()->CustomerID;
+        $customerID = $user->Customer()->get()->first()->id;
         $request->session()->put("idCustomer", $customerID);
-        $cart = Cart::where('SessionID', $this->sessionIdBeforeLogin)->get();
+        $cart = Cart::where('id_session', $this->sessionIdBeforeLogin)->get();
         foreach($cart as $cartItem){
-            $cartItem->CustomerID = $customerID;
+            $cartItem->id_customer = $customerID;
             $cartItem->save();
         }
     }
@@ -177,9 +177,9 @@ trait AuthenticatesUsers
      */
     protected function loggedOut(Request $request)
     {
-        $cart = Cart::where('SessionID', $this->sessionIdBeforeLogin)->get();
+        $cart = Cart::where('id_session', $this->sessionIdBeforeLogin)->get();
         foreach($cart as $cartItem){
-            $cartItem->SessionID = 'NULL';
+            $cartItem->id_session = 'NULL';
             $cartItem->save();
         }
     }

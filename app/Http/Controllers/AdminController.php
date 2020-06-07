@@ -21,7 +21,7 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $order = Order::where('Status', 'Success')->orderBy('OrderDate', 'DESC')->get();
+        $order = Order::where('status', '=', 'Success')->orderBy('order_date', 'DESC')->get();
         $customer = Customer::all();
         return view('admin.dashboard', compact('order', 'customer'));
     }
@@ -42,17 +42,20 @@ class AdminController extends Controller
             $filter = 'DAY';
             $number = 31;
         }
-        $orderDB = DB::select(DB::raw('SELECT '.$filter.'(OrderDate) as filters, COUNT(OrderDate) as quantity, SUM(Total) as total, SUM(SubTotal) as sub
-        From `orders` Where YEAR(OrderDate) = YEAR(CURRENT_TIMESTAMP) group By filters'));
+        $orderDB = DB::select(DB::raw('SELECT '.$filter.'(order_date) as filters, COUNT(order_date) as quantity, SUM(total) as total
+        From `orders` Where YEAR(order_date) = YEAR(CURRENT_TIMESTAMP) group By filters'));
 
-        $viewDB = DB::select(DB::raw('SELECT '.$filter.'(`Date`) as filters, CountView as quantity
-        From `views` Where YEAR(`Date`) = YEAR(CURRENT_TIMESTAMP)'));
+        // $orderDB = Order::selectRaw($filter."(order_date) as filters, COUNT(order_date) as quantity, SUM(total) as total")
+        //                 ->whereRaw("YEAR(order_date) = YEAR(CURRENT_TIMESTAMP)")
+        //                 ->groupBy("filters")->get();
 
+        $viewDB = DB::select(DB::raw('SELECT '.$filter.'(`date`) as filters, count_view as quantity
+        From `views` Where YEAR(`date`) = YEAR(CURRENT_TIMESTAMP)'));
         $indexOrder = 0;
         $indexView = 0;
         for($i = 1; $i <= $number; $i++){
-            if(sizeof($orderDB) > 0 && $orderDB[$indexOrder]->filters === $i){
-                $tmp = ($orderDB[$indexOrder]->total - $orderDB[$indexOrder]->sub);
+            if(sizeof($orderDB) > $indexOrder && $orderDB[$indexOrder]->filters === $i){
+                $tmp = ($orderDB[$indexOrder]->total);
                 array_push($order, $orderDB[$indexOrder]->quantity);
                 array_push($total, $tmp);
                 $indexOrder++;
@@ -62,7 +65,7 @@ class AdminController extends Controller
                 array_push($total, 0);
             }
 
-            if (sizeof($viewDB) > 0 && $viewDB[$indexView]->filters === $i) {
+            if ( sizeof($viewDB) > $indexView && $viewDB[$indexView]->filters === $i) {
                 array_push($view, $viewDB[$indexView]->quantity);
                 $indexView++;
             }
@@ -74,13 +77,13 @@ class AdminController extends Controller
     public function product(Request $request){
         if($request->method() == 'GET'){
             $category = Category::all();
-            $groupProducts = GroupProduct::where('Deleted', '=', 0)
-                                        ->orderBy('DateAdd', 'DESC')->get();
+            $groupProducts = GroupProduct::where('deleted', '=', 0)
+                                        ->orderBy('date_added', 'DESC')->get();
             return view('admin.product', compact('groupProducts', 'category'));
         }
         if($request->method() == 'POST'){
             $groupProduct = GroupProduct::find($request->productid);
-            $groupProduct->Deleted = 1;
+            $groupProduct->deleted = 1;
             if($groupProduct->save()){
                 return redirect($request->fullUrl());
             }
@@ -89,12 +92,12 @@ class AdminController extends Controller
 
     public function editProduct(Request $request, $id = null){
         if ($request->method() == 'GET') {
-            $groupProduct = GroupProduct::where('GroupNameNoVN', '=', $id)->get()->first();
+            $groupProduct = GroupProduct::where('group_code', '=', $id)->get()->first();
             $category = Category::all();
             return view('admin.editproduct', compact('groupProduct', 'category'));
         }
         else{
-            $group = GroupProduct::where('GroupNameNoVN', '=' , $request->code)->get()->first();
+            $group = GroupProduct::where('group_code', '=' , $request->code)->get()->first();
             $group->GroupName = $request->name;
             $group->Price = number_format($request->price).'₫';
             $group->Description = $request->description;
@@ -176,11 +179,11 @@ class AdminController extends Controller
             //insert new group product
             $group = new GroupProduct;
             $group->GroupName = $request->name;
-            $group->GroupNameNoVN = $request->code;
+            $group->group_code = $request->code;
             $group->Price = number_format($request->price).'₫';
             $group->Description = $request->description;
             $group->Sale = $request->sale;
-            $group->CategoryID = Category::where('CategoryName', '=', $request->category)->get()->first()->CategoryID;
+            $group->CategoryID = Category::where('category_name', '=', $request->category)->get()->first()->CategoryID;
             $group->Type = $request->type;
             $group->save();
             //create path to save image
@@ -236,7 +239,7 @@ class AdminController extends Controller
 
     public function order()
     {
-        $orders = Order::orderBy('OrderDate', 'DESC')->get();
+        $orders = Order::orderBy('order_date', 'DESC')->get();
         return view('admin.order', compact('orders'));
     }
 
@@ -252,7 +255,7 @@ class AdminController extends Controller
 
     public function voucher(Request $request){
         if($request->method() == 'GET'){
-            $vouchers = Voucher::orderBy('VoucherID', 'DESC')->get();
+            $vouchers = Voucher::orderBy('id', 'DESC')->get();
             return view('admin.voucher', compact('vouchers'));
         }
         else if($request->method() =='POST'){

@@ -75,11 +75,11 @@ class RegisterController extends Controller
         $idUser = User::where('email', $data['email'])->get()->first()->id;
 
         Customer::create([
-            'CustomerName' => $data['name'],
-            'Phone' => $data['phone'],
-            'Address' => $data['address'],
-            'Gender' => $data['gender'],
-            'UserID' => $idUser,
+            'customer_name' => $data['name'],
+            'phone' => $data['phone'],
+            'address' => $data['address'],
+            'gender' => $data['gender'],
+            'id_user' => $idUser,
         ]);
         return $result;
     }

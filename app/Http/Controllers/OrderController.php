@@ -15,24 +15,24 @@ class OrderController extends Controller
         $voucher = Voucher::where('Code', $request->voucher)->get()->first();
         $idCustomer = $request->session()->get('idCustomer');
         $total = 0;
-        $cart = Cart::where("CustomerID", $idCustomer)->get();
+        $cart = Cart::where("id_customer", $idCustomer)->get();
         foreach ($cart as $cartItem){
             $cartProduct = $cartItem->product()->get()->first();
-            $money = str_replace('₫', '', str_replace(',', '', $cartProduct->getGroup()->Price));
-            $total += ((int)$money)*$cartItem->Quantity;
+            $money = str_replace('₫', '', str_replace(',', '', $cartProduct->getGroup()->price));
+            $total += ((int)$money)*$cartItem->quantity;
         }
 
         $order = new Order;
-        $order->CustomerID = $idCustomer;
+        $order->id_customer = $idCustomer;
+        $order->total = $total;
         if($voucher){
-            $order->SubTotal = ($total*$voucher->Value/100);
-            $voucher->QuantityUsed = $voucher->QuantityUsed - 1;
+            $order->total = ($total*$voucher->Value/100);
+            $voucher->quantity_used = $voucher->quantity_used - 1;
             $voucher->save();
         }
-        $order->Total = $total;
-        $order->Address = $request->street . " " . $request->commune . " " . $request->district . " " .$request->city;
+        $order->address = $request->street . " " . $request->commune . " " . $request->district . " " .$request->city;
         if($order->save()){
-            OrderDetailController::create($idCustomer, $order->OrderID);
+            OrderDetailController::create($idCustomer, $order->id);
             (new CartController)->dropByCheckout($idCustomer);
             return url()->route('order');
         }

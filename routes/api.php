@@ -1,18 +1,15 @@
 <?php
 
-// use Illuminate\Http\Request;
+use App\Slider;
+use Illuminate\Http\Request;
+app('debugbar')->disable();
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::get('slider', function (Request $request) {
+    return Slider::orderBy("id", "desc")
+                ->take(4)->get();
+});
+

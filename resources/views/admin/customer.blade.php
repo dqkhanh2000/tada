@@ -17,12 +17,12 @@
         <tbody>
             @foreach($customers as $customer)
                 <tr>
-                    <td>{{$customer->CustomerID}}</td>
-                    <td>{{$customer->CustomerName}}</td>
-                    <td>{{$customer->Address}}</td>
-                    <td>{{$customer->Phone}}</td>
+                    <td>{{$customer->id}}</td>
+                    <td>{{$customer->customer_name}}</td>
+                    <td>{{$customer->address}}</td>
+                    <td>{{$customer->phone}}</td>
                     <td>{{$customer->user()->get()->first()->email}}</td>
-                    <td>{{$customer->Gender}}</td>
+                    <td>{{$customer->gender}}</td>
                 </tr>
             @endforeach
         </tbody>

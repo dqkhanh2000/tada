@@ -13,31 +13,32 @@ class CartController extends Controller
 {
     public function getCartByCustomer($idCustomer)
     {
-        return Cart::where("CustomerID", "=", $idCustomer)->get();
+        return Cart::where("id_customer", "=", $idCustomer)->get();
     }
 
     public function create(Request $request)
     {
-        $productID = $request->productID;
+        $id_product = $request->productID;
         $idCustomer = $request->idCustomer;
         $count = null;
-        if($idCustomer)
-            $count = Cart::where([["ProductID", '=', $productID], ["CustomerID", "=", $idCustomer]])->get();
+        if($idCustomer==null || $idCustomer == "null"){
+            $count = Cart::where([["id_product", '=', $id_product], ["id_session", "=", $request->session()->getId()]])->get();
+        }
         else
-            $count = Cart::where([["ProductID", '=', $productID], ["SessionID", "=", $request->session()->getId()]])->get();
+            $count = Cart::where([["id_product", '=', $id_product], ["id_customer", "=", $idCustomer]])->get();
         $cart = null;
        if( $count->count() > 0){
             $cart = $count->first();
-            $cart->Quantity = $count->first()->Quantity+$request->quantity;
+            $cart->quantity = $count->first()->quantity+$request->quantity;
        }
        else {
            $cart = new Cart;
-           $cart->Quantity = $request->quantity;
+           $cart->quantity = $request->quantity;
         }
-        $cart->ProductID = $productID;
-        if($idCustomer)
-            $cart->CustomerID = $idCustomer;
-        $cart->SessionID = $request->session()->getId();
+        $cart->id_product = $id_product;
+        if(!($idCustomer==null || $idCustomer == "null"))
+            $cart->id_customer = $idCustomer;
+        $cart->id_session = $request->session()->getId();
        if($cart->save()) return "ok";
 
     }
@@ -52,7 +53,7 @@ class CartController extends Controller
                 $this->drop($cart);
             }
             else{
-                $cart->Quantity = $value['quantity'];
+                $cart->quantity = $value['quantity'];
                 $cart->save();
             }
         }
@@ -75,10 +76,10 @@ class CartController extends Controller
         $carts = $this->getCartByCustomer(Session::get('idCustomer'));
         $sum = 0;
         foreach($carts as $key => $value){
-            $price = $value->product()->get()->first()->getGroup()->Price;
+            $price = $value->product()->get()->first()->getGroup()->price;
             $price = str_replace(',' , '', $price);
             $price = str_replace('₫' , '', $price);
-            $sum += ((int)$price)*$value->Quantity;
+            $sum += ((int)$price)*$value->quantity;
         }
         return $sum;
     }

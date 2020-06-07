@@ -7,23 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $table = "orders";
-    protected $primaryKey = "OrderID";
     public $timestamps = false;
 
     public function orderDetail(){
-        return $this->hasMany("App\OrderDetail", "OrderID", "OrderID");
+        return $this->hasMany("App\OrderDetail", "id_order", "id");
     }
 
     public function customer(){
-        return $this->belongsTo("App\Customer", "CustomerID", "CustomerID");
+        return $this->belongsTo("App\Customer", "id_customer", "id");
     }
 
     public function employee(){
-        return $this->belongsTo("App\Employee", "EmployeeID", "EmployeeID");
+        return $this->belongsTo("App\Employee", "id_employee", "id");
     }
 
     public function shippingDetail(){
-        return $this->hasOne("App\ShippingDetail", "OrderID", "OrderID");
+        return $this->hasOne("App\ShippingDetail", "id_order", "id");
     }
 
     public function countTotalOrder(){

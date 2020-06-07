@@ -52,10 +52,10 @@
     @endauth
     <script>
             var idCustomer = @guest
-                            {{"null"}}
-                         @else
-                         {{ $userLogged->CustomerID }}
-                         @endguest
+                            "null"
+                            @else
+                                {{ $userLogged->id }}
+                            @endguest
     </script>
     <!--===============================================================================================-->
 </head>
@@ -84,14 +84,14 @@
 							</li>
                             @foreach (App\ProductType::all() as $type)
                             <li>
-                                <a href="{{route('category', $type->TypeCode)}}">{{$type->TypeName}}</a>
+                                <a href="{{route('category', $type->type_code)}}">{{$type->type_name}}</a>
                                 @php
                                     $categorys = $type->category()->get();
                                 @endphp
                                 @if ($categorys->count() > 0)
                                 <ul class="sub-menu">
                                     @foreach ($categorys as $category)
-                                    <li><a href="{{route('category', [$type->TypeCode, $category->CategoryCode])}}">{{$category->CategoryName}}</a></li>
+                                    <li><a href="{{route('category', [$type->type_code, $category->category_code])}}">{{$category->category_name}}</a></li>
                                     @endforeach
 								</ul>
                                 @endif
@@ -131,7 +131,7 @@
                                             @else
                                                 <li class="nav-item dropdown">
                                                     <a class="nav-link" role="button" data-toggle="modal" data-target="#modal-profile" aria-haspopup="true" aria-expanded="false">
-                                                        {{$userLogged->CustomerName}}
+                                                        {{$userLogged->customer_name}}
                                                     </a>
 
                                                     <a class="nav-link" href="{{route('order')}}">Đơn hàng của tôi</a>
@@ -195,14 +195,14 @@
                 </li>
                     @foreach (App\ProductType::all() as $type)
                         <li>
-                            <a href="{{route('category', $type->TypeCode)}}">{{$type->TypeName}}</a>
+                            <a href="{{route('category', $type->type_code)}}">{{$type->type_name}}</a>
                             @php
                                 $categorys = $type->category()->get();
                             @endphp
                             @if ($categorys->count() > 0)
                                 <ul class="sub-menu-m">
                                     @foreach ($categorys as $category)
-                                    <li><a href="{{route('category', [$type->TypeCode, $category->CategoryCode])}}">{{$category->CategoryName}}</a></li>
+                                    <li><a href="{{route('category', [$type->type_code, $category->category_code])}}">{{$category->category_name}}</a></li>
                                     @endforeach
                                 </ul>
                                 <span class="arrow-main-menu-m">
@@ -229,7 +229,7 @@
                         @else
                             <li>
                                 <a role="button" href="#" data-toggle="modal" data-target="#modal-profile">
-                                    {{$userLogged->CustomerName}}
+                                    {{$userLogged->customer_name}}
                                 </a>
                             </li>
 
@@ -297,24 +297,25 @@
                                 @foreach ($cart as $cartItem)
                                     @php
                                         $cartProduct = $cartItem->product()->get()->first();
-                                        $money = str_replace('₫', '', str_replace(',', '', $cartProduct->getGroup()->Price));
-                                        if($cartProduct->getGroup()->Sale > 0)
-                                            $money = $money*(100-$cartProduct->getGroup()->Sale)/100;
-                                        $total+= ((int)$money)*$cartItem->Quantity;
+                                        $money = str_replace('₫', '', str_replace(',', '', $cartProduct->getGroup()->price));
+                                        if($cartProduct->getGroup()->sale_off > 0)
+                                            $money = $money*(100-$cartProduct->getGroup()->sale_off)/100;
+                                        $total+= ((int)$money)*$cartItem->quantity;
+
                                     @endphp
                                     <li class="header-cart-item flex-w flex-t m-b-12">
                                         <div class="header-cart-item-img">
-                                            <img src="{{asset("/image")}}/{{$cartProduct->productByColor()->get()->first()->SmallImage}}" alt="IMG">
+                                        <img src="{{route('home')}}/{{$cartProduct->getGroup()->image}}" alt="IMG">
                                         </div>
 
                                         <div class="header-cart-item-txt p-t-8">
-                                            <a href="{{route('detail', $cartProduct->getGroup()->GroupNameNoVN)}}" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
-                                                    {{$cartProduct->getGroup()->GroupName}}
+                                            <a href="{{route('detail', $cartProduct->getGroup()->group_code)}}" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
+                                                    {{$cartProduct->getGroup()->group_name}}
                                             </a>
 
                                             <span class="header-cart-item-info">
-                                                Phân loại (màu): {{$cartProduct->productByColor()->get()->first()->Color}},
-                                                Size: {{$cartProduct->Size}}
+                                                Phân loại (màu): {{$cartProduct->productByColor()->get()->first()->color}},
+                                                Size: {{$cartProduct->size}}
                                                 <br>
                                                 {{$cartItem->Quantity}} x {{number_format($money)}}đ
                                             </span>
@@ -356,7 +357,7 @@
 					<ul>
                         @foreach (App\ProductType::all() as $type)
                             <li class="p-b-10">
-                                <a class="stext-107 cl7 hov-cl1 trans-04" href="{{route('category', $type->TypeCode)}}">{{$type->TypeName}}</a>
+                                <a class="stext-107 cl7 hov-cl1 trans-04" href="{{route('category', $type->type_code)}}">{{$type->type_name}}</a>
 
                             </li>
                         @endforeach
@@ -608,18 +609,18 @@
                             @csrf
                             <div class="form-group">
                                 <label>Họ tên</label>
-                                <input type="text" class="form-control" name="name" value="{{$userLogged->CustomerName}}" aria-describedby="helpId" autocomplete="off">
+                                <input type="text" class="form-control" name="name" value="{{$userLogged->customer_name}}" aria-describedby="helpId" autocomplete="off">
                             </div>
                             <div class="form-group">
                                 <label>Giới tính</label>
                                 <select class="form-control  form-control-md" name="gender">
                                     <option @auth
-                                        @if ($userLogged->Gender === 'Men')
+                                        @if ($userLogged->gender === 'Men')
                                             selected
                                         @endif
                                     @endauth>Men</option>
                                     <option @auth
-                                        @if ($userLogged->Gender === 'Women')
+                                        @if ($userLogged->gender === 'Women')
                                             selected
                                         @endif
                                     @endauth>Women</option>
@@ -627,11 +628,11 @@
                             </div>
                             <div class="form-group">
                                 <label>Địa chỉ</label>
-                                <input type="text" class="form-control" value="{{$userLogged->Address}}" name="address" aria-describedby="helpId" autocomplete="off">
+                                <input type="text" class="form-control" value="{{$userLogged->address}}" name="address" aria-describedby="helpId" autocomplete="off">
                             </div>
                             <div class="form-group">
                                 <label>Số điện thoại</label>
-                                <input type="text" class="form-control" value="{{$userLogged->Phone}}" name="phone" aria-describedby="helpId" autocomplete="off">
+                                <input type="text" class="form-control" value="{{$userLogged->phone}}" name="phone" aria-describedby="helpId" autocomplete="off">
                             </div>
                             <input type="submit" class="btn btn-primary" value="Lưu">
                         </form>
